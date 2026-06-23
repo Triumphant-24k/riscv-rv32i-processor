@@ -1,0 +1,18 @@
+# QuestaSim
+work/
+transcript
+vsim.wlf
+modelsim.ini
+*.bak
+*.log
+*.qdb
+
+# Vivado (for later)
+.cache/
+.hw/
+.ip_user_files/
+.runs/
+.sim/
+.Xil/
+*.jou
+*.str
