@@ -82,15 +82,6 @@ ALU_Sel ->|          |
 
 ---
 
-## ALU Waveform
-
-<p align="center">
-
-<img src="docs/waveform.png" width="900"/>
-
-</p>
-
----
 
 ## Folder Structure
 
@@ -121,13 +112,3 @@ README.md
 - Build Data Memory
 - Integrate all modules into a single-cycle CPU
 - Implement a pipelined processor
-
----
-
-## Author
-
-Shiv Sriram
-
-Electronics and Communication Engineering Student
-
-Learning RTL Design, Computer Architecture and RISC-V Processor Design.
