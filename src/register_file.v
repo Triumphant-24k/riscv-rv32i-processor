@@ -39,4 +39,4 @@ end
 assign ReadData1 = registers[rs1];
 assign ReadData2 = registers[rs2];
 
-endmodule
+endmodule   
