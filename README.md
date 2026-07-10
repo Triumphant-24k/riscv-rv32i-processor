@@ -343,41 +343,7 @@ Expected register results:
 
 ## Simulation Results
 
-### ALU Waveform
 
-<img src="docs/waveform.png" width="900"/>
-
----
-
-### Program Counter Waveform
-
-<img src="docs/program_counter_waveform.png" width="900"/>
-
----
-
-### Instruction Memory Waveform
-
-<img src="docs/instruction_memory_waveform.png" width="900"/>
-
----
-
-### Immediate Generator Waveform
-
-<img src="docs/immediate_generator_waveform.png" width="900"/>
-
----
-
-### Data Memory Waveform
-
-<img src="docs/data_memory_waveform.png" width="900"/>
-
----
-
-### Control Unit Waveform
-
-<img src="docs/control_unit_waveform.png" width="900"/>
-
----
 
 ### Final CPU Integration Waveform
 
