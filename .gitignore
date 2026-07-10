@@ -2,6 +2,8 @@
 work/
 transcript
 vsim.wlf
+wlf*
+*.wlf
 modelsim.ini
 *.bak
 *.log
