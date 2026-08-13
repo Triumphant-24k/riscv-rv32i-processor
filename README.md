@@ -1,6 +1,6 @@
-# RV32I RISC-V Processor
+# RV32I Subset RISC-V Processor
 
-A 32-bit RV32I single-cycle RISC-V processor implemented in Verilog HDL and verified using QuestaSim.
+A 32-bit single-cycle processor implementing a basic subset of the RISC-V RV32I instruction set in Verilog HDL and simulated using QuestaSim.
 
 The processor is built using modular RTL blocks and supports a basic subset of RV32I instructions including arithmetic, immediate, memory, and branch-related control logic.
 
@@ -15,7 +15,7 @@ The processor is built using modular RTL blocks and supports a basic subset of R
 
 ---
 
-## Supported Instructions
+## Currently Supported Instructions
 
 | Instruction | Type | Operation |
 |------------|------|-----------|
@@ -351,21 +351,23 @@ Expected register results:
 
 ---
 
-## Verification Summary
+## Simulation Summary
 
 | Module | Testbench | Status |
 |--------|-----------|--------|
-| ALU | `alu_tb.v` | Passed |
-| Register File | `register_file_tb.v` | Passed |
-| Program Counter | `program_counter_tb.v` | Passed |
-| Instruction Memory | `instruction_memory_tb.v` | Passed |
-| Immediate Generator | `immediate_generator_tb.v` | Passed |
-| Control Unit | `control_unit_tb.v` | Passed |
-| Data Memory | `data_memory_tb.v` | Passed |
-| CPU Top | `cpu_top_tb.v` | Passed |
+| ALU | `alu_tb.v` | Simulated |
+| Register File | `register_file_tb.v` | Simulated |
+| Program Counter | `program_counter_tb.v` | Simulated |
+| Instruction Memory | `instruction_memory_tb.v` | Simulated |
+| Immediate Generator | `immediate_generator_tb.v` | Simulated |
+| Control Unit | `control_unit_tb.v` | Simulated |
+| Data Memory | `data_memory_tb.v` | Simulated |
+| CPU Top | `cpu_top_tb.v` | Simulated |
 
 ---
 
-## Final Status
+## Current Status
 
-A working basic RV32I single-cycle processor has been implemented and verified using module-level and CPU-level testbenches.
+A working educational single-cycle processor implementing a limited RV32I subset has been completed and simulated using module-level and CPU-level testbenches.
+
+The current testbenches generate simulation stimulus for waveform inspection. They do not yet contain automated assertions, full instruction-level regression tests, or official RISC-V ISA compliance testing.
