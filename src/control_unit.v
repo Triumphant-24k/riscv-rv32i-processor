@@ -32,7 +32,6 @@ begin
         // R-Type: add, sub, and, or, xor
         7'b0110011:
         begin
-            RegWrite = 1;
             ALUSrc   = 0;
             MemRead  = 0;
             MemWrite = 0;
@@ -40,19 +39,19 @@ begin
             Branch   = 0;
 
             case ({funct7, funct3})
-                {7'b0000000, 3'b000}: ALU_Sel = 3'b000; // ADD
-                {7'b0100000, 3'b000}: ALU_Sel = 3'b001; // SUB
-                {7'b0000000, 3'b111}: ALU_Sel = 3'b010; // AND
-                {7'b0000000, 3'b110}: ALU_Sel = 3'b011; // OR
-                {7'b0000000, 3'b100}: ALU_Sel = 3'b100; // XOR
-                default: ALU_Sel = 3'b000;
+                {7'b0000000, 3'b000}: begin RegWrite = 1; ALU_Sel = 3'b000; end // ADD
+                {7'b0100000, 3'b000}: begin RegWrite = 1; ALU_Sel = 3'b001; end // SUB
+                {7'b0000000, 3'b111}: begin RegWrite = 1; ALU_Sel = 3'b010; end // AND
+                {7'b0000000, 3'b110}: begin RegWrite = 1; ALU_Sel = 3'b011; end // OR
+                {7'b0000000, 3'b100}: begin RegWrite = 1; ALU_Sel = 3'b100; end // XOR
+                default: begin RegWrite = 0; ALU_Sel = 3'b000; end
             endcase
         end
 
         // I-Type: addi
         7'b0010011:
         begin
-            RegWrite = 1;
+            RegWrite = (funct3 == 3'b000);
             ALUSrc   = 1;
             MemRead  = 0;
             MemWrite = 0;
@@ -65,11 +64,11 @@ begin
         // Load: lw
         7'b0000011:
         begin
-            RegWrite = 1;
+            RegWrite = (funct3 == 3'b010);
             ALUSrc   = 1;
-            MemRead  = 1;
+            MemRead  = (funct3 == 3'b010);
             MemWrite = 0;
-            MemtoReg = 1;
+            MemtoReg = (funct3 == 3'b010);
             Branch   = 0;
             ImmSel   = 2'b00;
             ALU_Sel  = 3'b000; // ADD address
@@ -81,7 +80,7 @@ begin
             RegWrite = 0;
             ALUSrc   = 1;
             MemRead  = 0;
-            MemWrite = 1;
+            MemWrite = (funct3 == 3'b010);
             MemtoReg = 0;
             Branch   = 0;
             ImmSel   = 2'b01;
@@ -96,7 +95,7 @@ begin
             MemRead  = 0;
             MemWrite = 0;
             MemtoReg = 0;
-            Branch   = 1;
+            Branch   = (funct3 == 3'b000);
             ImmSel   = 2'b10;
             ALU_Sel  = 3'b001; // SUB for comparison
         end

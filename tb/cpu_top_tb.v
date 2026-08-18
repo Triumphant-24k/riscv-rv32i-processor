@@ -20,14 +20,21 @@ initial begin
     clk = 0;
     rst = 1;
 
-    // Hold reset for 10 ns
-    #10;
+    // Avoid releasing reset on the active clock edge.
+    #12;
     rst = 0;
 
     // Run enough cycles to execute instructions
-    #100;
+    #60;
 
-    $stop;
+    if (uut.REGFILE.registers[5] !== 32'd10) $fatal(1, "x5 mismatch");
+    if (uut.REGFILE.registers[6] !== 32'd20) $fatal(1, "x6 mismatch");
+    if (uut.REGFILE.registers[7] !== 32'd30) $fatal(1, "x7 mismatch");
+    if (uut.REGFILE.registers[8] !== 32'd10) $fatal(1, "x8 mismatch");
+
+    $display("PASS: CPU sample program completed correctly");
+
+    $finish;
 
 end
 

@@ -17,10 +17,10 @@ reg [31:0] memory [0:255];
 always @(posedge clk)
 begin
     if (MemWrite)
-        memory[Address[31:2]] <= WriteData;
+        memory[Address[9:2]] <= WriteData;
 end
 
 // Read operation
-assign ReadData = (MemRead) ? memory[Address[31:2]] : 32'b0;
+assign ReadData = (MemRead) ? memory[Address[9:2]] : 32'b0;
 
 endmodule

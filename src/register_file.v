@@ -36,7 +36,8 @@ begin
 end
 
 // Read logic
-assign ReadData1 = registers[rs1];
-assign ReadData2 = registers[rs2];
+// Keep x0 architecturally zero even before or during reset.
+assign ReadData1 = (rs1 == 5'd0) ? 32'b0 : registers[rs1];
+assign ReadData2 = (rs2 == 5'd0) ? 32'b0 : registers[rs2];
 
-endmodule   
+endmodule
