@@ -27,10 +27,10 @@ initial begin
     // Run enough cycles to execute instructions
     #60;
 
-    if (uut.REGFILE.registers[5] !== 32'd10) $fatal(1, "x5 mismatch");
-    if (uut.REGFILE.registers[6] !== 32'd20) $fatal(1, "x6 mismatch");
-    if (uut.REGFILE.registers[7] !== 32'd30) $fatal(1, "x7 mismatch");
-    if (uut.REGFILE.registers[8] !== 32'd10) $fatal(1, "x8 mismatch");
+    if (uut.CORE.REGFILE.registers[5] !== 32'd10) $fatal(1, "x5 mismatch");
+    if (uut.CORE.REGFILE.registers[6] !== 32'd20) $fatal(1, "x6 mismatch");
+    if (uut.CORE.REGFILE.registers[7] !== 32'd30) $fatal(1, "x7 mismatch");
+    if (uut.CORE.REGFILE.registers[8] !== 32'd10) $fatal(1, "x8 mismatch");
 
     $display("PASS: CPU sample program completed correctly");
 
