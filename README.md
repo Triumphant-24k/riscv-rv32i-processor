@@ -371,3 +371,15 @@ Expected register results:
 A working educational single-cycle processor implementing a limited RV32I subset has been completed and simulated using module-level and CPU-level testbenches.
 
 The current testbenches generate simulation stimulus for waveform inspection. They do not yet contain automated assertions, full instruction-level regression tests, or official RISC-V ISA compliance testing.
+
+---
+
+## OpenROAD Flow
+
+Use `cpu_core` as the synthesis top for OpenROAD Flow Scripts. It exposes
+instruction and data-memory buses so the processor remains observable and its
+memories can use resources from the selected technology. The original
+`cpu_top` remains the self-contained simulation wrapper.
+
+Sky130HD starter configuration and timing constraints are under `openroad/`.
+See `openroad/README.md` for the run command.
