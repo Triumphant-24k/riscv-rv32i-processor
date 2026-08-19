@@ -10,6 +10,9 @@ The processor is built using modular RTL blocks and supports a basic subset of R
 
 - Verilog HDL
 - QuestaSim
+- OpenROAD Flow Scripts
+- SkyWater SKY130 HD standard-cell platform
+- Docker Desktop with WSL2
 - VS Code
 - GitHub
 
@@ -38,6 +41,14 @@ The processor is built using modular RTL blocks and supports a basic subset of R
 riscv-rv32i-processor/
 
 docs/
+    openroad-results/
+        01-final-routed-layout.png
+        02-setup-timing-positive-slack.png
+        03-hold-timing-positive-slack.png
+        04-endpoint-slack-distribution.png
+        05-routing-congestion-heatmap.png
+        06-power-and-ir-drop-report.png
+        07-final-gds-generation-success.png
     waveform.png
     program_counter_waveform.png
     instruction_memory_waveform.png
@@ -54,7 +65,13 @@ src/
     immediate_generator.v
     control_unit.v
     data_memory.v
+    cpu_core.v
     cpu_top.v
+
+openroad/
+    config.mk
+    constraint.sdc
+    README.md
 
 tb/
     alu_tb.v
@@ -368,18 +385,95 @@ Expected register results:
 
 ## Current Status
 
-A working educational single-cycle processor implementing a limited RV32I subset has been completed and simulated using module-level and CPU-level testbenches.
+The educational single-cycle RV32I-subset processor has been simulated at the
+module and CPU levels and has completed an RTL-to-GDSII physical-design flow
+with OpenROAD Flow Scripts on the SKY130 HD platform.
 
-The current testbenches generate simulation stimulus for waveform inspection. They do not yet contain automated assertions, full instruction-level regression tests, or official RISC-V ISA compliance testing.
+The current verification is suitable for an educational project, but it is not
+a claim of production tapeout readiness. The testbenches do not yet provide an
+official RISC-V ISA compliance suite, exhaustive assertions, or gate-level
+regression. The external instruction/data interfaces also require
+system-specific I/O-delay constraints before full timing signoff.
 
 ---
 
-## OpenROAD Flow
+## OpenROAD RTL-to-GDSII Result
 
-Use `cpu_core` as the synthesis top for OpenROAD Flow Scripts. It exposes
-instruction and data-memory buses so the processor remains observable and its
-memories can use resources from the selected technology. The original
-`cpu_top` remains the self-contained simulation wrapper.
+`cpu_core` is the synthesis top used by OpenROAD. It exposes instruction and
+data-memory buses so that memories and peripherals can be supplied by the
+surrounding system. `cpu_top` remains the self-contained simulation wrapper.
 
-Sky130HD starter configuration and timing constraints are under `openroad/`.
-See `openroad/README.md` for the run command.
+The supplied `openroad/config.mk` and `openroad/constraint.sdc` target the
+SKY130 HD platform with a 20 ns clock period (50 MHz) and 35% core utilization.
+The flow completed synthesis, floorplanning, placement, clock-tree synthesis,
+detailed routing, fill, reporting, and GDS merge.
+
+### Recorded implementation results
+
+| Item | Result |
+|------|--------|
+| Platform | SkyWater SKY130 HD |
+| Synthesis top | `cpu_core` |
+| Clock target | 20 ns / 50 MHz |
+| Core utilization | 35% |
+| Floorplan design area | 57,149 µm² |
+| Placed cells reported | 25,161 including physical-only cells |
+| Worst setup slack visible in GUI | +3.537 ns |
+| Worst hold slack visible in GUI | +6.520 ns |
+| Estimated total power | 5.28 mW |
+| Worst reported VDD IR drop | 93.8 µV (0.01%) |
+| Final artifact | `results/sky130hd/practice_rv32i/base/6_final.gds` |
+
+The final layout loaded successfully with its SDC and extracted SPEF timing
+data. KLayout reported matching LEF/GDS cells and no orphan cells in the final
+layout.
+
+### Final routed layout
+
+<img src="docs/openroad-results/01-final-routed-layout.png" width="900" alt="Final routed RV32I CPU layout in OpenROAD"/>
+
+### Post-route timing
+
+| Setup timing | Hold timing |
+|---|---|
+| <img src="docs/openroad-results/02-setup-timing-positive-slack.png" width="430" alt="Positive setup timing slack"/> | <img src="docs/openroad-results/03-hold-timing-positive-slack.png" width="430" alt="Positive hold timing slack"/> |
+
+<img src="docs/openroad-results/04-endpoint-slack-distribution.png" width="650" alt="Endpoint setup slack distribution"/>
+
+### Routing congestion
+
+<img src="docs/openroad-results/05-routing-congestion-heatmap.png" width="900" alt="Post-route congestion heat map"/>
+
+### Power and IR-drop report
+
+<img src="docs/openroad-results/06-power-and-ir-drop-report.png" width="900" alt="OpenROAD power and IR-drop report"/>
+
+### Successful GDS generation
+
+<img src="docs/openroad-results/07-final-gds-generation-success.png" width="900" alt="Completed OpenROAD GDS generation log"/>
+
+### Signoff limitations
+
+- The GUI reported 1,036 unconstrained pins because the external instruction
+  and data interfaces do not yet have system-specific input/output delays.
+- The run used `LEC_CHECK=0` as a workaround for an instruction-set
+  compatibility problem in the prebuilt ORFS Docker image, so formal logical
+  equivalence was not executed in this run.
+- Foundry signoff DRC/LVS, antenna signoff, package/pad integration, and
+  production power-integrity analysis remain outside this educational flow.
+
+See `openroad/README.md` for the reproducible run command and output paths.
+
+### OpenROAD attribution
+
+Physical implementation and analysis were performed with the open-source
+[OpenROAD](https://github.com/The-OpenROAD-Project/OpenROAD) application through
+[OpenROAD-flow-scripts (ORFS)](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts).
+OpenROAD provides the unified physical-design engines, database, timing
+analysis, and GUI; ORFS supplies the reproducible RTL-to-GDSII flow used for
+this project.
+
+When referencing this implementation, please also cite the official OpenROAD
+and OpenROAD-flow-scripts repositories above. Their respective repositories
+contain the current licenses, documentation, contributors, and recommended
+academic citations.
